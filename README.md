@@ -1,4 +1,4 @@
-# Tauri + Leptos
+# Tauri + Leptos + Tailwindcss + Rumqttc
 
 This template should help get you started developing with Tauri and Leptos.
 
