@@ -55,12 +55,14 @@ async fn write_to_store<R: Runtime>(
         Some(path) => PathBuf::from(path),
         None => PathBuf::from(DEFAULT_PATH),
     };
+    // let path = PathBuf::from(DEFAULT_PATH);
     eprintln!("2222222222222222222222");
     let store = app.store(path).map_err(|e| e.to_string())?;
     println!("3333333333333333333333");
     store.set(key, value);
     println!("4444444444444444444444");
-    store.close_resource();
+    // store.close_resource();
+    println!("5555555555555555555555");
     Ok(())
 }
 #[tauri::command]
@@ -76,7 +78,7 @@ fn read_from_store<R: Runtime>(
     };
     let store = app.store(path).map_err(|e| e.to_string())?;
     let value = store.get(key);
-    store.close_resource();
+    // store.close_resource();
     Ok(value.map(|v| v.to_string()))
 }
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -84,10 +86,12 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet])
-        .invoke_handler(tauri::generate_handler![save_config])
-        .invoke_handler(tauri::generate_handler![write_to_store])
-        .invoke_handler(tauri::generate_handler![read_from_store])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            save_config,
+            write_to_store,
+            read_from_store
+        ])
         // 获取App的句柄,存入全局变量
         // .setup(|app| {
         //     let mut app_handle = APP_HANDLE
