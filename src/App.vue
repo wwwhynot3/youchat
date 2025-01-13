@@ -4,10 +4,23 @@ import { invoke } from "@tauri-apps/api/core";
 
 const greetMsg = ref("");
 const name = ref("");
-
+const storeMsg = ref("");
 async function greet() {
   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
   greetMsg.value = await invoke("greet", { name: name.value });
+}
+async function store() {
+  await invoke("write_to_store", { "key":"example key", "value":"example value" });
+}
+async function read() {
+  storeMsg.value = await invoke("read_from_store", { "key":"example key" })
+}
+async function remove() {
+
+  storeMsg.value = await invoke("remove_from_store", { "key": "example key" }).then((res) => {
+    console.log(res);
+    return res as string;
+  });
 }
 </script>
 
@@ -32,7 +45,17 @@ async function greet() {
       <input id="greet-input" v-model="name" placeholder="Enter a name..." />
       <button type="submit">Greet</button>
     </form>
+    <form class="row" @submit.prevent="store">
+      <button type="submit">store</button>
+    </form>
+    <form class="row" @submit.prevent="read">
+      <button type="submit">read</button>
+    </form>
+    <form class="row" @submit.prevent="remove">
+      <button type="submit">delete</button>
+    </form>
     <p>{{ greetMsg }}</p>
+    <p>{{ storeMsg }}</p>
   </main>
 </template>
 
